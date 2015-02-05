@@ -1,0 +1,73 @@
+#include <stdlib.h>
+#include <string.h>
+
+int numeroElementi(char stringa[])    //conta gli elementi contenuti nella stringa
+{
+    int contatore,numero=0;
+    for(contatore=0; contatore<strlen(stringa); contatore++)
+    {
+        if(stringa[contatore]=='+' || stringa[contatore]=='-') numero++;
+    }
+    return numero+1;
+}
+
+
+int char_to_int(char array[], int intervallo_inf, int intervallo_sup)   //converte la porzione di stringa nell'intervallo [intervallo_inf,intervallo_sup] in intero
+{
+    char arrayTemp[intervallo_sup-intervallo_inf+1];
+    int contatore;
+    for(contatore=intervallo_inf; contatore<=intervallo_sup; contatore++)
+    {
+        arrayTemp[contatore-intervallo_inf]=array[contatore];
+    }
+    return atoi(arrayTemp);
+}
+
+void riempiArray(char origine[], int dest[])        //prende i numeri contenuti in origine, li converte da carattere a intero e li copia in dest
+{
+    int contatore,intervallo_inf,intervallo_sup,contatore2=0;
+    for(contatore=0; contatore<strlen(origine); contatore++)
+    {
+        if(origine[contatore]=='+')
+        {
+            contatore++;
+            contatore2++;           //incomincio a riempire il secondo elemento di dest perchè il primo numero di origine viene saltato
+            intervallo_inf=contatore;
+            while(origine[contatore]!='+' && origine[contatore]!='-' && contatore<strlen(origine)) contatore++;
+            intervallo_sup=contatore+1;
+            dest[contatore2]=char_to_int(origine,intervallo_inf,intervallo_sup);
+            contatore--;
+        }
+        if(origine[contatore]=='-')
+        {
+            contatore2++;
+            intervallo_inf=contatore;
+            while(origine[contatore]!='+' && origine[contatore]!='-' && contatore<strlen(origine)) contatore++;
+            intervallo_sup=contatore+18;
+            dest[contatore2]=char_to_int(origine,intervallo_inf,intervallo_sup);
+            //contatore--;
+        }
+    }
+
+    contatore=0;        //resetto la variabile per riutilizzarla
+    while(origine[contatore]!='+' && origine[contatore]!='-') contatore++;    
+    dest[0]=char_to_int(origine,0,contatore);                   //aggiungo il primo numero che era stato scartato
+}
+
+
+int eval(char *expr)
+{
+    int contatore, valori[numeroElementi(expr)],risultato=0;
+    riempiArray(expr,valori);
+    for(contatore=0; contatore<numeroElementi(expr); contatore++)
+    {
+        risultato+=valori[contatore];
+    }
+    return risultato;
+}
+int main()
+{
+    char expr[]="5+16-19";
+    printf("Risultato: %i",eval(expr));
+    return 1;
+}
