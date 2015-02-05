@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int numeroElementi(char stringa[]){
+    int contatore,numero=0;
+    for(contatore=0;contatore<strlen(stringa);contatore++){
+        if(stringa[contatore]==' ') numero++;
+        }
+    return numero+1;
+    }
+
+
+int char_to_int(char array[], int intervallo_inf, int intervallo_sup){
+    char arrayTemp[intervallo_sup-intervallo_inf+1];
+    int contatore;
+    for(contatore=intervallo_inf;contatore<=intervallo_sup;contatore++){
+        arrayTemp[contatore-intervallo_inf]=array[contatore];
+        }
+    return atoi(arrayTemp);
+    }
+
+void riempiArray(char origine[], int dest[]){
+    int contatore,intervallo_inf,intervallo_sup,contatore2=0;
+    for(contatore=0;contatore<strlen(origine);contatore++){
+        if(origine[contatore]==' '){
+            contatore++;
+            contatore2++;
+            intervallo_inf=contatore;
+            while(origine[contatore]!=' ' && contatore<strlen(origine)) contatore++;
+            intervallo_sup=contatore+1;
+            dest[contatore2]=char_to_int(origine,intervallo_inf,intervallo_sup);
+            contatore--;
+            }
+        }
+
+    contatore=0;
+    while(origine[contatore]!=' ') contatore++;
+    dest[0]=char_to_int(origine,0,contatore);
+    }
+
+int eval(char * val, char * pos) {
+  int valori[numeroElementi(val)], posizioni[numeroElementi(pos)],valoreTemporaneo,valoreMinimo,contatore;
+
+  riempiArray(val, valori);
+  riempiArray(pos, posizioni);
+  valoreMinimo=valori[posizioni[0]];
+    printf("Valore iniziale:%i\n",valoreMinimo);
+
+  for(contatore=0;contatore<numeroElementi(pos);contatore++){
+      if(posizioni[contatore]>=0 && posizioni[contatore]<numeroElementi(val)) valoreTemporaneo=valori[posizioni[contatore]];
+      if(valoreTemporaneo<valoreMinimo) valoreMinimo=valoreTemporaneo;
+      }
+    return valoreMinimo;
+}
+
+int main(){
+char val[]="1 21 386 2 107 71 644";
+char pos[]="0 1 0";
+printf("Valore minimo: %i",eval(val,pos));
+return 1;
+}
